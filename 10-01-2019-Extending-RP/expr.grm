@@ -1,0 +1,49 @@
+(* This is the preamble where you can have arbitrary sml code. For us
+it is empty *)
+
+%%
+
+%eop EOF
+%verbose
+%pure
+%name Expr
+
+(* The terminals or tokens of the language *)
+%term CONST of int
+    | PLUS
+    | MINUS
+    | MUL
+    | EOF
+    | NEWLINE
+
+(* The nonterminals of the language *)
+%nonterm EXP     of Ast.Expr
+       | EXPS    of Ast.Expr list
+       | PROGRAM of Ast.Expr list
+
+%noshift EOF
+(*
+
+Operator precedence and associativity. The %left says the operator is
+left associative and the precedence increase as you go down this list.
+
+*)
+
+%left PLUS MINUS  (* + and - are of same precedence *)
+%left MUL         (* higher than + and -            *)
+
+(* The type that captures position in the input *)
+%pos int
+
+%%
+
+PROGRAM : EXPS                 ( EXPS )
+	| EXPS NEWLINE         ( EXPS )
+
+EXPS    : (* empty *)          ( []                  )
+	| EXP NEWLINE EXPS     ( EXP :: EXPS         )
+
+EXP     : CONST                ( Ast.Const CONST     )
+        | EXP PLUS EXP         ( Ast.plus  EXP1 EXP2 )
+	| EXP MINUS EXP        ( Ast.minus EXP1 EXP2 )
+	| EXP MUL   EXP        ( Ast.mul   EXP1 EXP2 )

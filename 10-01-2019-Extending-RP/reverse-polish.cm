@@ -1,0 +1,14 @@
+Library
+  structure Ast
+  structure Machine
+  structure Translate
+  structure EC
+is
+  ast.sml
+  machine.sml
+  translate.sml
+  expr.grm
+  expr.lex
+  ec.sml
+  $/ml-yacc-lib.cm
+  $/basis.cm

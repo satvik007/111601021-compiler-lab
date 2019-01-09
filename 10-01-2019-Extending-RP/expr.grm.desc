@@ -1,0 +1,162 @@
+
+state 0:
+
+	PROGRAM : . EXPS 
+	PROGRAM : . EXPS NEWLINE 
+
+	CONST	shift 3
+
+	EXP	goto 2
+	EXPS	goto 1
+	PROGRAM	goto 13
+
+	.	reduce by rule 2
+
+
+state 1:
+
+	PROGRAM : EXPS .  (reduce by rule 0)
+	PROGRAM : EXPS . NEWLINE 
+
+	NEWLINE	shift 4
+
+
+	.	reduce by rule 0
+
+
+state 2:
+
+	EXP : EXP . PLUS EXP 
+	EXP : EXP . MINUS EXP 
+	EXP : EXP . MUL EXP 
+	EXPS : EXP . NEWLINE EXPS 
+
+	PLUS	shift 8
+	MINUS	shift 7
+	MUL	shift 6
+	NEWLINE	shift 5
+
+
+	.	error
+
+
+state 3:
+
+	EXP : CONST .  (reduce by rule 4)
+
+
+
+	.	reduce by rule 4
+
+
+state 4:
+
+	PROGRAM : EXPS NEWLINE .  (reduce by rule 1)
+
+
+
+	.	reduce by rule 1
+
+
+state 5:
+
+	EXPS : EXP NEWLINE . EXPS 
+
+	CONST	shift 3
+
+	EXP	goto 2
+	EXPS	goto 9
+
+	.	reduce by rule 2
+
+
+state 6:
+
+	EXP : EXP MUL . EXP 
+
+	CONST	shift 3
+
+	EXP	goto 10
+
+	.	error
+
+
+state 7:
+
+	EXP : EXP MINUS . EXP 
+
+	CONST	shift 3
+
+	EXP	goto 11
+
+	.	error
+
+
+state 8:
+
+	EXP : EXP PLUS . EXP 
+
+	CONST	shift 3
+
+	EXP	goto 12
+
+	.	error
+
+
+state 9:
+
+	EXPS : EXP NEWLINE EXPS .  (reduce by rule 3)
+
+
+
+	.	reduce by rule 3
+
+
+state 10:
+
+	EXP : EXP . PLUS EXP 
+	EXP : EXP . MINUS EXP 
+	EXP : EXP . MUL EXP 
+	EXP : EXP MUL EXP .  (reduce by rule 7)
+
+
+
+	.	reduce by rule 7
+
+
+state 11:
+
+	EXP : EXP . PLUS EXP 
+	EXP : EXP . MINUS EXP 
+	EXP : EXP MINUS EXP .  (reduce by rule 6)
+	EXP : EXP . MUL EXP 
+
+	MUL	shift 6
+
+
+	.	reduce by rule 6
+
+
+state 12:
+
+	EXP : EXP . PLUS EXP 
+	EXP : EXP PLUS EXP .  (reduce by rule 5)
+	EXP : EXP . MINUS EXP 
+	EXP : EXP . MUL EXP 
+
+	MUL	shift 6
+
+
+	.	reduce by rule 5
+
+
+state 13:
+
+
+	EOF	accept
+
+
+	.	error
+
+10 of 27 action table entries left after compaction
+8 goto table entries

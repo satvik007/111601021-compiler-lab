@@ -1,0 +1,11 @@
+$(SML_LIB)/basis/basis.mlb
+$(SML_LIB)/mlyacc-lib/mlyacc-lib.mlb
+
+ast.sml         (* the syntax                                   *)
+machine.sml     (* The stack machine                            *)
+translate.sml   (* The translate function                       *)
+expr.grm.sig    (* The signature file generated for the grammar *)
+expr.grm.sml    (* The parser                                   *)
+expr.lex.sml    (* The lexer for the machine                    *)
+
+ec.sml
