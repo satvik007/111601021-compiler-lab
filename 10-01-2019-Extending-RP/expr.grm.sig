@@ -2,8 +2,11 @@ signature Expr_TOKENS =
 sig
 type ('a,'b) token
 type svalue
+val RPAREN:  'a * 'a -> (svalue,'a) token
+val LPAREN:  'a * 'a -> (svalue,'a) token
 val NEWLINE:  'a * 'a -> (svalue,'a) token
 val EOF:  'a * 'a -> (svalue,'a) token
+val DIVI:  'a * 'a -> (svalue,'a) token
 val MUL:  'a * 'a -> (svalue,'a) token
 val MINUS:  'a * 'a -> (svalue,'a) token
 val PLUS:  'a * 'a -> (svalue,'a) token

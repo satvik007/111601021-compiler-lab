@@ -21,6 +21,7 @@ digit=[0-9];
 "+"               => (SOME (Machine.Exec Ast.Plus      ));
 "-"               => (SOME (Machine.Exec Ast.Minus     ));
 "*"               => (SOME (Machine.Exec Ast.Mul       ));
+"/"               => (SOME (Machine.Exec Ast.Divi       ));
 "p"               => (SOME (Machine.PrintTop));
 "s"               => (SOME (Machine.PrintStack));
 "c"               => (SOME (Machine.ClearStack));
