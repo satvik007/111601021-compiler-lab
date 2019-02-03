@@ -1,0 +1,3 @@
+#!/bin/bash
+ml-lex tiger.lex
+sml < input.sml

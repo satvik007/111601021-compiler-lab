@@ -1,0 +1,10 @@
+CM.make "sources.cm";
+Parse.parse "test/test1.tig";
+Parse.parse "test/test2.tig";
+Parse.parse "test/test3.tig";
+Parse.parse "test/test4.tig";
+Parse.parse "test/test5.tig";
+Parse.parse "test/test6.tig";
+Parse.parse "test/test7.tig";
+Parse.parse "test/test8.tig";
+Parse.parse "test/test9.tig";
