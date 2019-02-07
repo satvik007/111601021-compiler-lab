@@ -57,23 +57,29 @@ exp: NIL			()
 
 (* lvalue : ID ()
     | lvalue LBRACK exp RBRACK ()
+*)
+exps : exp nexps ()
+    | ()
 
-exps : LBRACK exp extra RBRACK ()
- *)
-decs : LBRACE dec RBRACE ()
+nexps : SEMICOLON exps 
+    | ()
+
+decs : dec ()
       | ()
 
-dec : TYPE ID EQUAL ty ()
-      | vardec ()
-      (* |  *)
+dec : (* TYPE ID EQUAL ty () *)
+      vardec ()
+      (*function id ( tyfields ) [ : type-id ] = exp |  *)
 
-vardec :  VAR ID optvar ASSIGN exp ()
-      
-(* ty : typeid  ()
+vardec :  VAR ID ASSIGN exp () (* VAR ID optvar ASSIGN exp ()*)
+
+(*
+ty : typeid  ()
   | LBRACE tyfields RBRACE 
 
-tyfields : ID COLON typeid optyf ()
 
+tyfields : ID COLON typeid optyf ()
+(*
 typeid : ID ()
 
 op : PLUS ()
