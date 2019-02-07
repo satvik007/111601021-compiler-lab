@@ -1,0 +1,104 @@
+%%
+%term
+    EOF 
+  | ID of string
+  | INT of int | STRING of string 
+  | COMMA | COLON | SEMICOLON | LPAREN | RPAREN | LBRACK | RBRACK 
+  | LBRACE | RBRACE | DOT 
+  | PLUS | MINUS | TIMES | DIVIDE | EQ | NEQ | LT | LE | GT | GE
+  | AND | OR | ASSIGN
+  | ARRAY | IF | THEN | ELSE | WHILE | FOR | TO | DO | LET | IN | END | OF 
+  | BREAK | NIL
+  | FUNCTION | VAR | TYPE 
+
+%nonterm  exp 
+        | program
+        | typeid 
+        | lvalue
+        | 
+%pos int
+%verbose
+%start program
+%eop EOF
+%noshift EOF
+
+%name Tiger
+
+%keyword WHILE FOR TO BREAK LET IN END FUNCTION VAR TYPE ARRAY IF THEN ELSE 
+	DO OF NIL
+
+%prefer THEN ELSE LPAREN
+
+%value ID ("bogus")
+%value INT (1)
+%value STRING ("")
+
+%%
+
+program	: exp       ()
+        | decs      ()
+	
+exp: NIL			()
+    | INT ()
+    | STRING ()
+    (* | typeid LBRACK exp RBRACK OF exp ()
+    | typeid LBRACE rec RBRACE ()
+    | lvalue ()
+    | ID LPAREN args RPAREN ()
+    | MINUS exp ()
+    | exp op exp ()
+    | LPAREN exps RPAREN ()
+    | lvalue ASSIGN exp ()
+    | IF exp THEN exp els ()
+    | WHILE exp DO exp ()
+    | FOR ID ASSIGN exp TO exp DO exp ()
+    | BREAK () *)
+    | LET decs IN exps end ()
+
+(* lvalue : ID ()
+    | lvalue LBRACK exp RBRACK ()
+
+exps : LBRACK exp extra RBRACK ()
+ *)
+decs : LBRACE dec RBRACE ()
+      | ()
+
+dec : TYPE ID EQUAL ty ()
+      | vardec ()
+      (* |  *)
+
+vardec :  VAR ID optvar ASSIGN exp ()
+      
+(* ty : typeid  ()
+  | LBRACE tyfields RBRACE 
+
+tyfields : ID COLON typeid optyf ()
+
+typeid : ID ()
+
+op : PLUS ()
+  | MINUS ()
+  | TIMES ()
+  | DIVIDE ()
+  | EQ ()
+  | NEQ ()
+  | LT ()
+  | LE ()
+  | GT ()
+  | GE ()
+  | AND ()
+  | OR ()
+ *)
+(* [ id = exp { , id = exp } ]*)
+(* rec : ID EQUAL exp nrec ()
+    | ()
+nrec : COMMA rec 
+    | ()
+
+args : exp nargs ()
+    |            ()
+
+nargs : COMMA args ()
+    | ()
+
+ *)
