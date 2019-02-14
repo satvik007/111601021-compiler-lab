@@ -1,0 +1,181 @@
+
+state 0:
+
+	init : . program 
+
+	INT	shift 3
+
+	init	goto 14
+	program	goto 2
+	exp	goto 1
+
+	.	reduce by rule 1
+
+
+state 1:
+
+	program : exp . SEMICOLON program 
+	exp : exp . PLUS exp 
+	exp : exp . MINUS exp 
+	exp : exp . TIMES exp 
+	exp : exp . DIVIDE exp 
+
+	SEMICOLON	shift 8
+	PLUS	shift 7
+	MINUS	shift 6
+	TIMES	shift 5
+	DIVIDE	shift 4
+
+
+	.	error
+
+
+state 2:
+
+	init : program .  (reduce by rule 0)
+
+
+
+	.	reduce by rule 0
+
+
+state 3:
+
+	exp : INT .  (reduce by rule 3)
+
+
+
+	.	reduce by rule 3
+
+
+state 4:
+
+	exp : exp DIVIDE . exp 
+
+	INT	shift 3
+
+	exp	goto 9
+
+	.	error
+
+
+state 5:
+
+	exp : exp TIMES . exp 
+
+	INT	shift 3
+
+	exp	goto 10
+
+	.	error
+
+
+state 6:
+
+	exp : exp MINUS . exp 
+
+	INT	shift 3
+
+	exp	goto 11
+
+	.	error
+
+
+state 7:
+
+	exp : exp PLUS . exp 
+
+	INT	shift 3
+
+	exp	goto 12
+
+	.	error
+
+
+state 8:
+
+	program : exp SEMICOLON . program 
+
+	INT	shift 3
+
+	program	goto 13
+	exp	goto 1
+
+	.	reduce by rule 1
+
+
+state 9:
+
+	exp : exp . PLUS exp 
+	exp : exp . MINUS exp 
+	exp : exp . TIMES exp 
+	exp : exp . DIVIDE exp 
+	exp : exp DIVIDE exp .  (reduce by rule 7)
+
+	PLUS	shift 7
+	MINUS	shift 6
+
+
+	.	reduce by rule 7
+
+
+state 10:
+
+	exp : exp . PLUS exp 
+	exp : exp . MINUS exp 
+	exp : exp . TIMES exp 
+	exp : exp TIMES exp .  (reduce by rule 6)
+	exp : exp . DIVIDE exp 
+
+	PLUS	shift 7
+	MINUS	shift 6
+
+
+	.	reduce by rule 6
+
+
+state 11:
+
+	exp : exp . PLUS exp 
+	exp : exp . MINUS exp 
+	exp : exp MINUS exp .  (reduce by rule 5)
+	exp : exp . TIMES exp 
+	exp : exp . DIVIDE exp 
+
+
+
+	.	reduce by rule 5
+
+
+state 12:
+
+	exp : exp . PLUS exp 
+	exp : exp PLUS exp .  (reduce by rule 4)
+	exp : exp . MINUS exp 
+	exp : exp . TIMES exp 
+	exp : exp . DIVIDE exp 
+
+
+
+	.	reduce by rule 4
+
+
+state 13:
+
+	program : exp SEMICOLON program .  (reduce by rule 2)
+
+
+
+	.	reduce by rule 2
+
+
+state 14:
+
+
+	EOF	accept
+
+
+	.	error
+
+12 of 31 action table entries left after compaction
+9 goto table entries

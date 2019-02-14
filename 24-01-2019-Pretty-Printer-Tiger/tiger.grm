@@ -1,110 +1,37 @@
 %%
-%term
-    EOF 
-  | ID of string
-  | INT of int | STRING of string 
-  | COMMA | COLON | SEMICOLON | LPAREN | RPAREN | LBRACK | RBRACK 
-  | LBRACE | RBRACE | DOT 
-  | PLUS | MINUS | TIMES | DIVIDE | EQ | NEQ | LT | LE | GT | GE
-  | AND | OR | ASSIGN
-  | ARRAY | IF | THEN | ELSE | WHILE | FOR | TO | DO | LET | IN | END | OF 
-  | BREAK | NIL
-  | FUNCTION | VAR | TYPE 
+%term	EOF
+	| SEMICOLON
+	| INT of int
+	| PLUS | MINUS | TIMES | DIVIDE
+	| EQ
 
-%nonterm  exp 
-        | program
-        | typeid 
-        | lvalue
-        | 
+%nonterm 	init		of Ast.exp list
+		| 	program  	of Ast.exp list
+        | 	exp     	of Ast.exp
+		|	exps 		of Ast.exp list
+	
 %pos int
 %verbose
-%start program
+
+
 %eop EOF
 %noshift EOF
 
+%left SEMICOLON
+%left TIMES DIVIDE
+%left PLUS MINUS
+
 %name Tiger
-
-%keyword WHILE FOR TO BREAK LET IN END FUNCTION VAR TYPE ARRAY IF THEN ELSE 
-	DO OF NIL
-
-%prefer THEN ELSE LPAREN
-
-%value ID ("bogus")
-%value INT (1)
-%value STRING ("")
 
 %%
 
-program	: exp       ()
-        | decs      ()
-	
-exp: NIL			()
-    | INT ()
-    | STRING ()
-    (* | typeid LBRACK exp RBRACK OF exp ()
-    | typeid LBRACE rec RBRACE ()
-    | lvalue ()
-    | ID LPAREN args RPAREN ()
-    | MINUS exp ()
-    | exp op exp ()
-    | LPAREN exps RPAREN ()
-    | lvalue ASSIGN exp ()
-    | IF exp THEN exp els ()
-    | WHILE exp DO exp ()
-    | FOR ID ASSIGN exp TO exp DO exp ()
-    | BREAK () *)
-    | LET decs IN exps end ()
+init	: 	program					(program)
 
-(* lvalue : ID ()
-    | lvalue LBRACK exp RBRACK ()
-*)
-exps : exp nexps ()
-    | ()
+program	:							([])
+		| 	exp SEMICOLON program	(exp::program)
 
-nexps : SEMICOLON exps 
-    | ()
-
-decs : dec ()
-      | ()
-
-dec : (* TYPE ID EQUAL ty () *)
-      vardec ()
-      (*function id ( tyfields ) [ : type-id ] = exp |  *)
-
-vardec :  VAR ID ASSIGN exp () (* VAR ID optvar ASSIGN exp ()*)
-
-(*
-ty : typeid  ()
-  | LBRACE tyfields RBRACE 
-
-
-tyfields : ID COLON typeid optyf ()
-(*
-typeid : ID ()
-
-op : PLUS ()
-  | MINUS ()
-  | TIMES ()
-  | DIVIDE ()
-  | EQ ()
-  | NEQ ()
-  | LT ()
-  | LE ()
-  | GT ()
-  | GE ()
-  | AND ()
-  | OR ()
- *)
-(* [ id = exp { , id = exp } ]*)
-(* rec : ID EQUAL exp nrec ()
-    | ()
-nrec : COMMA rec 
-    | ()
-
-args : exp nargs ()
-    |            ()
-
-nargs : COMMA args ()
-    | ()
-
- *)
+exp     :   INT                     (Ast.INT(INT))
+        |   exp PLUS exp            (Ast.BINOP(exp1,Ast.PLUS,exp2))
+		|	exp MINUS exp			(Ast.BINOP(exp1,Ast.MINUS,exp2))
+		|	exp TIMES exp			(Ast.BINOP(exp1,Ast.TIMES,exp2))
+		|	exp DIVIDE exp			(Ast.BINOP(exp1,Ast.DIVIDE,exp2))

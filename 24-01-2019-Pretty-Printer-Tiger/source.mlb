@@ -1,0 +1,9 @@
+$(SML_LIB)/basis/basis.mlb
+$(SML_LIB)/mlyacc-lib/mlyacc-lib.mlb
+
+ast.sml
+translate.sml
+tiger.grm.sig
+tiger.grm.sml
+tiger.lex.sml
+TigerCompile.sml
