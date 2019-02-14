@@ -3,12 +3,18 @@
 	| SEMICOLON
 	| INT of int
 	| PLUS | MINUS | TIMES | DIVIDE
-	| EQ
+	| EQ | ASSIGN | ID of string
+	| LET | IN | END | VAR 
+
 
 %nonterm 	init		of Ast.exp list
 		| 	program  	of Ast.exp list
         | 	exp     	of Ast.exp
 		|	exps 		of Ast.exp list
+		| 	vardec		of Ast.dec
+		| 	decs 		of Ast.dec list
+		| 	dec 		of Ast.dec
+
 	
 %pos int
 %verbose
@@ -27,11 +33,28 @@
 
 init	: 	program					(program)
 
-program	:							([])
-		| 	exp SEMICOLON program	(exp::program)
+program	:	exp SEMICOLON program	(exp::program)
+		|							([])
 
 exp     :   INT                     (Ast.INT(INT))
+		| 	ID 						(Ast.ID(ID))
         |   exp PLUS exp            (Ast.BINOP(exp1,Ast.PLUS,exp2))
 		|	exp MINUS exp			(Ast.BINOP(exp1,Ast.MINUS,exp2))
 		|	exp TIMES exp			(Ast.BINOP(exp1,Ast.TIMES,exp2))
 		|	exp DIVIDE exp			(Ast.BINOP(exp1,Ast.DIVIDE,exp2))
+		| 	LET decs IN exps END	(Ast.LET(decs, exps))
+
+exps 	: 	exp SEMICOLON exps		(exp :: exps)
+		| 	exp 					(exp :: [])
+		| 							([])
+
+decs 	: 	dec decs				(dec :: decs)
+		| 	 						([])
+
+dec  	: 	vardec					(vardec)
+
+vardec 	: 	VAR ID ASSIGN exp 		(Ast.VARDEC(ID, exp))
+
+
+
+

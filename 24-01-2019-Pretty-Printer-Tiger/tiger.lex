@@ -34,6 +34,17 @@ esc = ("\a"|"\b"|"\f"|"\n"|"\r"|"\t"|"\v");
 "-"         => (Tokens.MINUS (yypos, yypos+1));
 "+"         => (Tokens.PLUS (yypos, yypos+1));
 ";"         => (Tokens.SEMICOLON (yypos, yypos+1));
+":="        => (Tokens.ASSIGN (yypos, yypos + 2));
+
+"let"       => (Tokens.LET(yypos, yypos + 3));
+"in"        => (Tokens.IN(yypos, yypos + 2));
+"end"       => (Tokens.END(yypos, yypos + 3));
+"var"       => (Tokens.VAR(yypos, yypos + 3));
+
+({letter}({letter}|{digit}|"_")*) | ("_main")
+            =>  (Tokens.ID(yytext, yypos,
+                    yypos + size yytext));
+
 {digit}+    => (Tokens.INT(IntFromString yytext,
                     yypos, yypos + size yytext));
 .           =>  (continue());

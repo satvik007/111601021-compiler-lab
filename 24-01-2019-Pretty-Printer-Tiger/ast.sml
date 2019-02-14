@@ -4,7 +4,13 @@ structure Ast = struct
     type ID = string
 
     datatype exp    = INT of int
+                    | ID of string
                     | BINOP of (exp * binop * exp)
+                    | LET of (dec list * exp list)
+
+        and 
+
+        dec         = VARDEC of (ID * exp)
 
     datatype program = EXPS of (exp list)
 
@@ -13,4 +19,5 @@ structure Ast = struct
                         |   MINUS   =>  "-"
                         |   TIMES   =>  "*"
                         |   DIVIDE  =>  "/"
+
 end

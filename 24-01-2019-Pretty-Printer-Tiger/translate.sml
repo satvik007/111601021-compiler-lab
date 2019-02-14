@@ -15,7 +15,19 @@ fun print_expression (Ast.INT x) = print (Int.toString (x))
                 print (" " ^ (Ast.binopDenote bop) ^ " ") ;
                 print_expression y
                 )
+| 	print_expression (Ast.LET (x, y)) =
+			(	indent := !indent + 1;	
+				print ("let" ^ new_line(!indent));
+				print_decs (x);
+				print ("in" ^ new_line (!indent));	
+				print_exps (y);
+				indent := !indent - 1;
+				print ("end" ^ new_line (!indent))
 
+			)
+| 	print_expression (Ast.ID x) =
+		(print (x)
+		)
 and
 
 print_exps (x::exp_lst)   =
@@ -24,6 +36,22 @@ print_exps (x::exp_lst)   =
         print (new_line(!indent));
         print_exps(exp_lst))
 |   print_exps []   = (print (bktab))
+
+and 
+
+print_decs (x :: y)		=
+	(	print_dec(x);
+		print (new_line(!indent));
+		print_decs(y)
+	)
+| print_decs [] =	(print (bktab))
+
+and 
+
+print_dec (Ast.VARDEC(x, y)) = 
+	(	print ("var " ^ x ^ " := ");
+	 	print_expression(y)
+	)
 
 fun compile []        = ()
   | compile (x :: xs) = (print_expression x ; print (";" ^ new_line (!indent)) ; compile xs)
