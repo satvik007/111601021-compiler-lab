@@ -2,6 +2,14 @@ signature Tiger_TOKENS =
 sig
 type ('a,'b) token
 type svalue
+val ELSE:  'a * 'a -> (svalue,'a) token
+val THEN:  'a * 'a -> (svalue,'a) token
+val IF:  'a * 'a -> (svalue,'a) token
+val RPAREN:  'a * 'a -> (svalue,'a) token
+val LPAREN:  'a * 'a -> (svalue,'a) token
+val COMMA:  'a * 'a -> (svalue,'a) token
+val COLON:  'a * 'a -> (svalue,'a) token
+val FUNCTION:  'a * 'a -> (svalue,'a) token
 val VAR:  'a * 'a -> (svalue,'a) token
 val END:  'a * 'a -> (svalue,'a) token
 val IN:  'a * 'a -> (svalue,'a) token

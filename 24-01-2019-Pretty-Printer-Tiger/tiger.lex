@@ -5,7 +5,7 @@ type svalue        = Tokens.svalue
 type ('a,'b) token = ('a,'b) Tokens.token
 type lexresult     = (svalue,pos) token
 
-
+val nested_commenting = ref 0;
 
 fun eof() = Tokens.EOF(0,0)
 fun IntFromString str = let
@@ -27,24 +27,48 @@ letter = [a-zA-Z]   ;
 esc = ("\a"|"\b"|"\f"|"\n"|"\r"|"\t"|"\v");
 %%
 
-{eol} => (continue());
-{whitespace} => (continue());
-"/"         => (Tokens.DIVIDE (yypos, yypos+1));
-"*"         => (Tokens.TIMES (yypos, yypos+1));
-"-"         => (Tokens.MINUS (yypos, yypos+1));
-"+"         => (Tokens.PLUS (yypos, yypos+1));
-";"         => (Tokens.SEMICOLON (yypos, yypos+1));
-":="        => (Tokens.ASSIGN (yypos, yypos + 2));
+<INITIAL> "/*"    => (
+            nested_commenting := !nested_commenting + 1;
+            YYBEGIN COMMENT; continue());
 
-"let"       => (Tokens.LET(yypos, yypos + 3));
-"in"        => (Tokens.IN(yypos, yypos + 2));
-"end"       => (Tokens.END(yypos, yypos + 3));
-"var"       => (Tokens.VAR(yypos, yypos + 3));
+<COMMENT> "/*"    => (
+                      nested_commenting := !nested_commenting + 1;
+                      continue());
 
-({letter}({letter}|{digit}|"_")*) | ("_main")
+<COMMENT> "*/"    => (
+                      nested_commenting := !nested_commenting - 1;
+                      if (!nested_commenting = 0) then (YYBEGIN INITIAL; continue())
+                      else continue());
+                
+<COMMENT> . | [\n]       => (continue());
+
+<INITIAL> {eol} =>            (lineNum := !lineNum + 1;
+                    linePos := yypos :: !linePos; continue());
+
+<INITIAL> {whitespace} => (continue());
+<INITIAL> "/"         => (Tokens.DIVIDE (yypos, yypos+1));
+<INITIAL> "*"         => (Tokens.TIMES (yypos, yypos+1));
+<INITIAL> "-"         => (Tokens.MINUS (yypos, yypos+1));
+<INITIAL> "+"         => (Tokens.PLUS (yypos, yypos+1));
+<INITIAL> ";"         => (Tokens.SEMICOLON (yypos, yypos+1));
+<INITIAL> ":="        => (Tokens.ASSIGN (yypos, yypos + 2));
+<INITIAL> ":"         => (Tokens.COLON(yypos, yypos + 1));
+<INITIAL> ","         => (Tokens.COMMA(ypos, yypos + 1));
+<INITIAL> "("         => (Tokens.LPAREN(yypos, yypos + 1));
+<INITIAL> ")"         => (Tokens.RPAREN(yypos, yypos + 1));
+
+<INITIAL> "let"       => (Tokens.LET(yypos, yypos + 3));
+<INITIAL> "in"        => (Tokens.IN(yypos, yypos + 2));
+<INITIAL> "end"       => (Tokens.END(yypos, yypos + 3));
+<INITIAL> "var"       => (Tokens.VAR(yypos, yypos + 3));
+<INITIAL> "if"        => (Tokens.IF(yypos, yypos + 2));
+<INITIAL> "then"      => (Tokens.THEN(yypos, yypos + 4));
+<INITIAL> "else"      => (Tokens.ELSE(yypos, yypos + 4));
+
+<INITIAL> ({letter}({letter}|{digit}|"_")*) | ("_main")
             =>  (Tokens.ID(yytext, yypos,
                     yypos + size yytext));
 
-{digit}+    => (Tokens.INT(IntFromString yytext,
+<INITIAL> {digit}+    => (Tokens.INT(IntFromString yytext,
                     yypos, yypos + size yytext));
 .           =>  (continue());

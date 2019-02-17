@@ -11,6 +11,12 @@ structure Ast = struct
         and 
 
         dec         = VARDEC of (ID * exp)
+                    | FUNCDEC of (ID * tyfields * exp)
+        
+        and 
+        
+        tyfields    = TYFIELD of ((ID * ID) list) 
+
 
     datatype program = EXPS of (exp list)
 
