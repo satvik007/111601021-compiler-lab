@@ -3,8 +3,8 @@
 4 - 6 +     2 - 3;
 
 let 
-	var    a :=  2     + 3
-	var b    :=    4    - 4
+	var    a :=  2     + 3;
+	var b    :=    4    - 4;
 	var    c := 3 -      2
 in 
 	a    +   b    ;
@@ -24,9 +24,10 @@ end;
 */
 
 let 
-	var    a :=  2     + 3
-	var b    :=    4    - 4
-	var    c := 3 -      2 
+	var    a :=  2     + 3;
+	var b    :=    4    - 4;
+	var    c := 3 -      2;
+	function d = 2 + 3
 in 
 			let 
 		var a		 := 2 + 3

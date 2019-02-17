@@ -63,6 +63,7 @@ esc = ("\a"|"\b"|"\f"|"\n"|"\r"|"\t"|"\v");
 <INITIAL> "if"        => (Tokens.IF(yypos, yypos + 2));
 <INITIAL> "then"      => (Tokens.THEN(yypos, yypos + 4));
 <INITIAL> "else"      => (Tokens.ELSE(yypos, yypos + 4));
+<INITIAL> "function"  => (Tokens.FUNCTION(yypos, yypos + 8));
 
 <INITIAL> ({letter}({letter}|{digit}|"_")*) | ("_main")
             =>  (Tokens.ID(yytext, yypos,

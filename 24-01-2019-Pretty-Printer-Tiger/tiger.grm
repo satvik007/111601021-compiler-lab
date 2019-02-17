@@ -15,9 +15,10 @@
         | 	exp     	of Ast.exp
 		|	exps 		of Ast.exp list
 		| 	vardec		of Ast.dec
+		| 	funcdec 	of Ast.dec
 		| 	decs 		of Ast.dec list
 		| 	dec 		of Ast.dec
-		| 	tyfields	of (Ast.ID * Ast.ID) list
+		| 	tyfields	of Ast.TYFIELD list
 		| 	typeid		of Ast.ID
 
 	
@@ -55,12 +56,13 @@ exps 	: 	exp SEMICOLON exps		(exp :: exps)
 		| 	exp 					(exp :: [])
 		| 							([])
 
-decs 	: 	dec decs				(dec :: decs)
+decs 	: 	dec SEMICOLON decs		(dec :: decs)
+		| 	dec						(dec :: [])
 		| 	 						([])
 
 dec  	: 	vardec					(vardec)
-		| 	FUNCTION ID LPAREN tyfields RPAREN EQ exp  	(Ast.FUNCDEC(ID, Ast.TYFIELD (tyfields), exp))
-
+		| 	funcdec					(funcdec)
+		
 tyfields :	ID COLON typeid COMMA tyfields	((ID, typeid) :: tyfields)
 		|	ID COLON typeid					([(ID, typeid)])
  		|									([])
@@ -68,6 +70,9 @@ tyfields :	ID COLON typeid COMMA tyfields	((ID, typeid) :: tyfields)
 typeid 	 : 	ID						(ID)
 
 vardec 	: 	VAR ID ASSIGN exp 		(Ast.VARDEC(ID, exp))
+
+funcdec :	FUNCTION ID LPAREN tyfields RPAREN EQ exp  	(Ast.FUNCDEC(ID, tyfields, exp))
+
 
 
 

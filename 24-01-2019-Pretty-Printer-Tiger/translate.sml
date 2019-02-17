@@ -41,6 +41,7 @@ and
 
 print_decs (x :: y)		=
 	(	print_dec(x);
+		if (null y) then print ("") else print (";");
 		print (new_line(!indent));
 		print_decs(y)
 	)
@@ -64,13 +65,14 @@ print_dec (Ast.VARDEC(x, y)) =
 
 and 
 
-print_param (Ast.TYFIELD x) = 
-	( case x of 
-		((a, b) :: xs) => ( print (a ^ ":" ^ b);
-							if (null xs) then () else print(", ");
-							print_param(Ast.TYFIELD xs))
-		| ([])		   => ( )
+print_param ((a, b) :: xs) = 
+	( 
+		print (a ^ ":" ^ b);
+		if (null xs) then () else print(", ");
+		print_param(xs)
 	)
+| print_param ([]) = ()
+
 
 fun compile []        = ()
   | compile (x :: xs) = (print_expression x ; print (";" ^ new_line (!indent)) ; compile xs)
