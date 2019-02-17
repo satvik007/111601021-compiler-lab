@@ -42,8 +42,7 @@ esc = ("\a"|"\b"|"\f"|"\n"|"\r"|"\t"|"\v");
                 
 <COMMENT> . | [\n]       => (continue());
 
-<INITIAL> {eol} =>            (lineNum := !lineNum + 1;
-                    linePos := yypos :: !linePos; continue());
+<INITIAL> {eol} =>            (continue());
 
 <INITIAL> {whitespace} => (continue());
 <INITIAL> "/"         => (Tokens.DIVIDE (yypos, yypos+1));
@@ -53,7 +52,7 @@ esc = ("\a"|"\b"|"\f"|"\n"|"\r"|"\t"|"\v");
 <INITIAL> ";"         => (Tokens.SEMICOLON (yypos, yypos+1));
 <INITIAL> ":="        => (Tokens.ASSIGN (yypos, yypos + 2));
 <INITIAL> ":"         => (Tokens.COLON(yypos, yypos + 1));
-<INITIAL> ","         => (Tokens.COMMA(ypos, yypos + 1));
+<INITIAL> ","         => (Tokens.COMMA(yypos, yypos + 1));
 <INITIAL> "("         => (Tokens.LPAREN(yypos, yypos + 1));
 <INITIAL> ")"         => (Tokens.RPAREN(yypos, yypos + 1));
 

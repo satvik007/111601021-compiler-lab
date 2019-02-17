@@ -22,7 +22,7 @@ fun print_expression (Ast.INT x) = print (Int.toString (x))
 				print ("in" ^ new_line (!indent));	
 				print_exps (y);
 				indent := !indent - 1;
-				print ("end" ^ new_line (!indent))
+				print ("end")
 
 			)
 | 	print_expression (Ast.ID x) =

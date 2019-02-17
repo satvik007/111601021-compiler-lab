@@ -176,7 +176,7 @@ type pos = int
 type arg = unit
 structure MlyValue = 
 struct
-datatype svalue = VOID | ntVOID of unit ->  unit | ID of unit ->  (string) | INT of unit ->  (int) | typeid of unit ->  (Ast.exp) | tyfields of unit ->  (Ast.tyfields) | dec of unit ->  (Ast.dec) | decs of unit ->  (Ast.dec list) | vardec of unit ->  (Ast.dec) | exps of unit ->  (Ast.exp list) | exp of unit ->  (Ast.exp) | program of unit ->  (Ast.exp list) | init of unit ->  (Ast.exp list)
+datatype svalue = VOID | ntVOID of unit ->  unit | ID of unit ->  (string) | INT of unit ->  (int) | typeid of unit ->  (Ast.ID) | tyfields of unit ->  ( ( Ast.ID * Ast.ID )  list) | dec of unit ->  (Ast.dec) | decs of unit ->  (Ast.dec list) | vardec of unit ->  (Ast.dec) | exps of unit ->  (Ast.exp list) | exp of unit ->  (Ast.exp) | program of unit ->  (Ast.exp list) | init of unit ->  (Ast.exp list)
 end
 type svalue = MlyValue.svalue
 type result = Ast.exp list
@@ -331,7 +331,7 @@ end
 |  ( 16, ( ( _, ( MlyValue.exp exp1, _, exp1right)) :: _ :: _ :: ( _, ( MlyValue.tyfields tyfields1, _, _)) :: _ :: ( _, ( MlyValue.ID ID1, _, _)) :: ( _, ( _, FUNCTION1left, _)) :: rest671)) => let val  result = MlyValue.dec (fn _ => let val  (ID as ID1) = ID1 ()
  val  (tyfields as tyfields1) = tyfields1 ()
  val  (exp as exp1) = exp1 ()
- in ((*#line 62.51 "tiger.grm"*)Ast.FUNCDEC(ID, tyfields, exp)(*#line 331.1 "tiger.grm.sml"*)
+ in ((*#line 62.51 "tiger.grm"*)Ast.FUNCDEC(ID, Ast.TYFIELD (tyfields), exp)(*#line 331.1 "tiger.grm.sml"*)
 )
 end)
  in ( LrTable.NT 6, ( result, FUNCTION1left, exp1right), rest671)
@@ -346,7 +346,7 @@ end)
 end
 |  ( 18, ( ( _, ( MlyValue.typeid typeid1, _, typeid1right)) :: _ :: ( _, ( MlyValue.ID ID1, ID1left, _)) :: rest671)) => let val  result = MlyValue.tyfields (fn _ => let val  (ID as ID1) = ID1 ()
  val  (typeid as typeid1) = typeid1 ()
- in ((*#line 65.26 "tiger.grm"*)(ID, typeid)(*#line 347.1 "tiger.grm.sml"*)
+ in ((*#line 65.26 "tiger.grm"*)[(ID, typeid)](*#line 347.1 "tiger.grm.sml"*)
 )
 end)
  in ( LrTable.NT 7, ( result, ID1left, typeid1right), rest671)
@@ -356,7 +356,7 @@ end
  in ( LrTable.NT 7, ( result, defaultPos, defaultPos), rest671)
 end
 |  ( 20, ( ( _, ( MlyValue.ID ID1, ID1left, ID1right)) :: rest671)) => let val  result = MlyValue.typeid (fn _ => let val  (ID as ID1) = ID1 ()
- in ((*#line 68.22 "tiger.grm"*)Ast.ID(ID)(*#line 358.1 "tiger.grm.sml"*)
+ in ((*#line 68.22 "tiger.grm"*)ID(*#line 358.1 "tiger.grm.sml"*)
 )
 end)
  in ( LrTable.NT 8, ( result, ID1left, ID1right), rest671)

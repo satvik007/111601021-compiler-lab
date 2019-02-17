@@ -9,3 +9,29 @@ let
 in 
 	a    +   b    ;
 end;
+/*
+	var    a :=  2     + 3
+	/*var b    :=    4    - 4
+	var    c := 3 -      2 
+in 
+			let 
+		var a		 := 2 + 3
+			in 
+		a - b;
+	end;  
+	a    +   b    ;*/
+end;
+*/
+
+let 
+	var    a :=  2     + 3
+	var b    :=    4    - 4
+	var    c := 3 -      2 
+in 
+			let 
+		var a		 := 2 + 3
+			in 
+		a - b;
+	end;  
+	a    +   b    ;
+end;

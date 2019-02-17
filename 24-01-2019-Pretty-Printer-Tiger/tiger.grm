@@ -17,8 +17,8 @@
 		| 	vardec		of Ast.dec
 		| 	decs 		of Ast.dec list
 		| 	dec 		of Ast.dec
-		| 	tyfields	of Ast.tyfields
-		| 	typeid		of Ast.exp
+		| 	tyfields	of (Ast.ID * Ast.ID) list
+		| 	typeid		of Ast.ID
 
 	
 %pos int
@@ -59,13 +59,13 @@ decs 	: 	dec decs				(dec :: decs)
 		| 	 						([])
 
 dec  	: 	vardec					(vardec)
-		| 	FUNCTION ID LPAREN tyfields RPAREN EQ exp  	(Ast.FUNCDEC(ID, tyfields, exp))
+		| 	FUNCTION ID LPAREN tyfields RPAREN EQ exp  	(Ast.FUNCDEC(ID, Ast.TYFIELD (tyfields), exp))
 
 tyfields :	ID COLON typeid COMMA tyfields	((ID, typeid) :: tyfields)
-		|	ID COLON typeid					((ID, typeid))
+		|	ID COLON typeid					([(ID, typeid)])
  		|									([])
 
-typeid 	 : 	ID						(Ast.ID(ID))
+typeid 	 : 	ID						(ID)
 
 vardec 	: 	VAR ID ASSIGN exp 		(Ast.VARDEC(ID, exp))
 
