@@ -1,5 +1,5 @@
 structure Ast = struct
-    datatype binop = PLUS | MINUS | TIMES | DIVIDE
+    datatype binop = PLUS | MINUS | TIMES | DIVIDE | EQUALS
 
     type ID = string
 
@@ -8,6 +8,8 @@ structure Ast = struct
                     | BINOP of (exp * binop * exp)
                     | LET of (dec list * exp list)
                     | FUNC of (ID * exp list)
+                    | IF of (exp * exp)
+                    | IFELSE of (exp * exp * exp)
         and 
 
         dec         = VARDEC of (ID * exp)
@@ -19,5 +21,6 @@ structure Ast = struct
                         |   MINUS   =>  "-"
                         |   TIMES   =>  "*"
                         |   DIVIDE  =>  "/"
+                        |   EQUALS  =>  "="
 
 end

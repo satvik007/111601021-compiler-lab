@@ -25,11 +25,13 @@
 %eop EOF
 %noshift EOF
 
-%left SEMICOLON
+%right COLON
 %left TIMES DIVIDE
 %left PLUS MINUS
+%right EQ
 %left COMMA
-%right COLON
+%left SEMICOLON
+
 
 %name Tiger
 
@@ -46,9 +48,12 @@ exp     :   INT                     (Ast.INT(INT))
 		|	exp MINUS exp			(Ast.BINOP(exp1,Ast.MINUS,exp2))
 		|	exp TIMES exp			(Ast.BINOP(exp1,Ast.TIMES,exp2))
 		|	exp DIVIDE exp			(Ast.BINOP(exp1,Ast.DIVIDE,exp2))
+		| 	exp EQ exp 				(Ast.BINOP(exp1,Ast.EQUALS,exp2))
 		| 	LET decs IN exps END	(Ast.LET(decs, exps))
 		| 	ID LPAREN expcomm RPAREN (Ast.FUNC(ID, expcomm))
-	
+		| 	IF exp THEN exp 		(Ast.IF(exp1, exp2))
+		| 	IF exp THEN exp ELSE exp (Ast.IFELSE(exp1, exp2, exp3))
+
 expcomm : 	exp COMMA expcomm 		(exp :: expcomm)
 		| 	exp 					(exp :: [])
 		| 							([])

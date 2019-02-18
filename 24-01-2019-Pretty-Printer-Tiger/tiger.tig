@@ -40,3 +40,12 @@ call (3 - 3     , 4 +      a- 6); call (3 - 3     , 4 +      a- 6);
 	end;  
 	a    +   b    ;
 end;
+
+
+if 4 + 2 then 3 - 1;
+
+if 4 + 2 then if 4 + 2 then 3 - 1;
+
+if 4 + 2 then 3 - 1 else if 4 + 2 then 3 - 1 else if 4 + 2 then if 4 + 2 then 3 - 1 else 4 - 5 else 4 - 5;
+
+

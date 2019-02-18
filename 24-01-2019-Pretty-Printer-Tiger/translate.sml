@@ -34,7 +34,35 @@ fun print_expression (Ast.INT x) = print (Int.toString (x))
 		print_expcomm (b);
 		print (")")
 	)
-
+| 	print_expression (Ast.IF(a, b)) = 
+	(
+		print ("if (");
+		print_expression (a);
+		print (") then (");
+		indent := !indent + 1;
+		print (new_line(!indent));
+		print_expression (b);
+		indent := !indent - 1;
+		print (new_line(!indent) ^ ")")
+	)
+| 	print_expression (Ast.IFELSE(a, b, c)) = 
+	(
+		print ("if (");
+		print_expression (a);
+		print (") then (");
+		indent := !indent + 1;
+		print (new_line(!indent));
+		print_expression (b);
+		indent := !indent - 1;
+		print (new_line(!indent));
+		print (") else (");
+		indent := !indent + 1;
+		print (new_line(!indent));
+		print_expression (c);
+		indent := !indent - 1;
+		print (new_line(!indent));
+		print (")")
+	)
 and
 
 print_expcomm (x :: xs) = 
