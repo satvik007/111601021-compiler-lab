@@ -23,6 +23,8 @@ in
 end;
 */
 
+call (3 - 3     , 4 +      a- 6);
+
 let 
 	var    a :=  2     + 3;
 	var b    :=    4    - 4;
@@ -33,6 +35,8 @@ in
 		var a		 := 2 + 3
 			in 
 		a - b;
+call (3 - 3     , 4 +      a- 6); call (3 - 3     , 4 +      a- 6); 
+
 	end;  
 	a    +   b    ;
 end;

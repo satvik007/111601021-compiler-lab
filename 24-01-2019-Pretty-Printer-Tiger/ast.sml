@@ -7,7 +7,7 @@ structure Ast = struct
                     | ID of string
                     | BINOP of (exp * binop * exp)
                     | LET of (dec list * exp list)
-
+                    | FUNC of (ID * exp list)
         and 
 
         dec         = VARDEC of (ID * exp)

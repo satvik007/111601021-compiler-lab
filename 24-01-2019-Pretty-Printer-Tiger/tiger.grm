@@ -17,7 +17,7 @@
 		| 	vardec		of Ast.dec
 		| 	decs 		of Ast.dec list
 		| 	dec 		of Ast.dec
-
+		| 	expcomm 	of Ast.exp list
 	
 %pos int
 %verbose
@@ -47,6 +47,11 @@ exp     :   INT                     (Ast.INT(INT))
 		|	exp TIMES exp			(Ast.BINOP(exp1,Ast.TIMES,exp2))
 		|	exp DIVIDE exp			(Ast.BINOP(exp1,Ast.DIVIDE,exp2))
 		| 	LET decs IN exps END	(Ast.LET(decs, exps))
+		| 	ID LPAREN expcomm RPAREN (Ast.FUNC(ID, expcomm))
+	
+expcomm : 	exp COMMA expcomm 		(exp :: expcomm)
+		| 	exp 					(exp :: [])
+		| 							([])
 
 exps 	: 	exp SEMICOLON exps		(exp :: exps)
 		| 	exp 					(exp :: [])

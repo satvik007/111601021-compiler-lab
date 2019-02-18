@@ -28,11 +28,28 @@ fun print_expression (Ast.INT x) = print (Int.toString (x))
 | 	print_expression (Ast.ID x) =
 		(print (x)
 		)
+| 	print_expression (Ast.FUNC(a, b)) = 
+	(
+		print (a ^ " (");
+		print_expcomm (b);
+		print (")")
+	)
+
+and
+
+print_expcomm (x :: xs) = 
+	(
+		print_expression (x);
+		if (null xs) then () else print (", ");
+		print_expcomm (xs)
+	)
+| print_expcomm ([]) = ()
+
 and
 
 print_exps (x::exp_lst)   =
     (   print_expression (x);
-        print (";");
+        if (null exp_lst) then () else print (";");
         print (new_line(!indent));
         print_exps(exp_lst))
 |   print_exps []   = (print (bktab))
