@@ -2,7 +2,6 @@ structure Ast = struct
     datatype binop = PLUS | MINUS | TIMES | DIVIDE
 
     type ID = string
-    type TYFIELD = (ID * ID)
 
     datatype exp    = INT of int
                     | ID of string
@@ -12,7 +11,6 @@ structure Ast = struct
         and 
 
         dec         = VARDEC of (ID * exp)
-                    | FUNCDEC of (ID * TYFIELD list * exp)
         
     datatype program = EXPS of (exp list)
 

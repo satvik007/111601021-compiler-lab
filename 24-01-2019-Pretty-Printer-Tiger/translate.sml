@@ -53,26 +53,6 @@ print_dec (Ast.VARDEC(x, y)) =
 	(	print ("var " ^ x ^ " := ");
 	 	print_expression(y)
 	)
-| print_dec (Ast.FUNCDEC(a, b, c)) =
-	(
-		print(a);
-		print ("(");
-		print_param(b);
-		print(") = ");
-		print_expression(c);
-		print(new_line(!indent))
-	)
-
-and 
-
-print_param ((a, b) :: xs) = 
-	( 
-		print (a ^ ":" ^ b);
-		if (null xs) then () else print(", ");
-		print_param(xs)
-	)
-| print_param ([]) = ()
-
 
 fun compile []        = ()
   | compile (x :: xs) = (print_expression x ; print (";" ^ new_line (!indent)) ; compile xs)
