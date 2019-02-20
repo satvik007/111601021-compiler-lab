@@ -184,16 +184,35 @@ while !change = true do (
                 val x = hd(!sym)
                 val prods = ref (RHSSet.listItems ( AtomMap.lookup((#rules Grm) , x ) handle NotFound => RHSSet.empty ))
             in
-                print (Atom.toString (x) ^ ": "); 
                 while (List.null(!prods) = false) do (
                     let
                         val rhs = ref (List.hd(!prods))
+                        val i = ref 0
+                        val j = ref 0 
+                        val k = List.length(!rhs)
+                        val ff = ref true
+                        val ss = ref true 
+                        val fs = ref true
                     in
                         if (is_nullable(!rhs) andalso not (is_null(x))) then (
                             NULLABLE := #1 (AtomMap.remove (!NULLABLE, x));
                             NULLABLE := AtomMap.insert (!NULLABLE, x, true);
                             change := true
-                        ) else ()
+                        ) else ();
+                        i := 0;
+                        while (!i < k) do (
+                            j := !i + 1;
+                            fs := true;
+                            if (ff) then (
+                                          
+                            );
+                            ff := !ff andalso is_null(List.nth(!rhs , !i));
+                            while (!j < k) do (
+                                fs := !fs andalso is_null(List.nth(!rhs, !j));
+
+                            );
+                            i := !i + 1
+                        )
                         
                     end;
                     prods := tl (!prods)
