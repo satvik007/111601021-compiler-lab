@@ -97,10 +97,85 @@ in
     )
 end;
 
+fun init () = 
+    (
+    let 
+        val sym = ref (AtomMap.listKeys (#rules Grm))
+    in
+        while (List.null(!sym) = false) do (
+            let 
+                val x = hd(!sym)
+                val prods = ref (RHSSet.listItems ( AtomMap.lookup((#rules Grm) , x ) handle NotFound => RHSSet.empty ))
+            in
+                NULLABLE := AtomMap.insert (!NULLABLE, x, false);
+                FOLLOW := AtomMap.insert (!FOLLOW, x, AtomSet.empty);
+                FIRST := AtomMap.insert (!FIRST, x, AtomSet.empty)
+            end;
+            sym := tl(!sym)
+        )
+    end
+    );
 
-(* 
+fun printAtomSet at_set = (printAtomList(AtomSet.listItems(at_set)))
+
+fun printFirstFollowHelper [] =  (print "=== ======== ===\n")
+|   printFirstFollowHelper (x::xs) = (let
+                                        val (k , v) = x
+                                    in
+                                        (print ((Atom.toString k) ^ " : " );
+                                        printAtomSet(v);
+                                        printFirstFollowHelper xs)
+                                    end);
+
+fun printNullableHelper [] = (print "=== ======== ===\n")
+|   printNullableHelper (x::xs) = (let
+                                    val (k , v) = x
+                                in
+                                    (print ((Atom.toString k) ^ " : " ^ (Bool.toString v) ^ "\n");
+                                    printNullableHelper xs)
+                                end);
+
+fun printNullable () =  (let
+                            val nullable_lst = AtomMap.listItemsi (!NULLABLE)
+                        in
+                            (print ("\n=== NULLABLE ===\n");
+                            printNullableHelper nullable_lst)
+                        end);
+
+fun printFollow () = (let
+                            val follow_lst = AtomMap.listItemsi (!FOLLOW)
+                        in
+                            (print ("\n=== FOLLOW ===\n");
+                            printFirstFollowHelper follow_lst)
+                        end);
+
+fun printFirst () = (let
+                            val first_lst = AtomMap.listItemsi (!FIRST)
+                        in
+                            (print ("\n=== FIRST ===\n");
+                            printFirstFollowHelper first_lst)
+                        end);
+                    
+init();
+printNullable();
+printFirst();
+printFollow();
+
+fun is_null (s) = 
+    (
+        AtomMap.lookup (!NULLABLE, s) handle NotFound => false
+    );
+    
+
+fun is_nullable (x :: xs) = 
+    (
+        is_null (x) andalso is_nullable (xs)
+    )
+| is_nullable ([]) = 
+    (true);
+
 while !change = true do (
-    change := false
+    change := false;
     let 
         val sym = ref (AtomMap.listKeys (#rules Grm))
     in
@@ -114,13 +189,23 @@ while !change = true do (
                     let
                         val rhs = ref (List.hd(!prods))
                     in
-                        printAtomList (!rhs)
+                        if (is_nullable(!rhs) andalso not (is_null(x))) then (
+                            NULLABLE := #1 (AtomMap.remove (!NULLABLE, x));
+                            NULLABLE := AtomMap.insert (!NULLABLE, x, true);
+                            change := true
+                        ) else ()
+                        
                     end;
                     prods := tl (!prods)
                 )
             end;
-            sym := tl(!sym);
-            print("\n")
+            sym := tl(!sym)
         )
-    end;
-) *)
+    end
+);
+
+
+printNullable();
+printFirst();
+printFollow()
+
