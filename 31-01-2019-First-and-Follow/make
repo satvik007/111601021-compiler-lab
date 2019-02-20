@@ -1,4 +1,3 @@
 #!/bin/bash
 
-mlton source.mlb
-./source
+sml < input.sml
