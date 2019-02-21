@@ -66,6 +66,11 @@ val FIRST : AtomSet.set AtomMap.map ref = ref AtomMap.empty;
 val FOLLOW : AtomSet.set AtomMap.map ref = ref AtomMap.empty;
 val NULLABLE : bool AtomMap.map ref = ref AtomMap.empty;
 
+val OLD_FIRST : AtomSet.set AtomMap.map ref = ref AtomMap.empty;
+val OLD_FOLLOW : AtomSet.set AtomMap.map ref = ref AtomMap.empty;
+val OLD_NULLABLE : bool AtomMap.map ref = ref AtomMap.empty;
+
+
 fun printAtomList (x :: xs) = 
     (
         print (Atom.toString (x));
@@ -157,15 +162,11 @@ fun printFirst () = (let
                         end);
                     
 init();
-printNullable();
-printFirst();
-printFollow();
 
 fun is_null (s) = 
     (
         AtomMap.lookup (!NULLABLE, s) handle NotFound => false
     );
-    
 
 fun is_nullable (x :: xs) = 
     (
@@ -174,8 +175,13 @@ fun is_nullable (x :: xs) =
 | is_nullable ([]) = 
     (true);
 
+(* is_nullable (List.hd(ref RHSSet.listItems(Y_prod)));    *)
+
 while !change = true do (
     change := false;
+    OLD_NULLABLE := !NULLABLE;
+    OLD_FIRST := !FIRST;
+    OLD_FOLLOW := !FOLLOW;
     let 
         val sym = ref (AtomMap.listKeys (#rules Grm))
     in
@@ -196,35 +202,58 @@ while !change = true do (
                     in
                         if (is_nullable(!rhs) andalso not (is_null(x))) then (
                             NULLABLE := #1 (AtomMap.remove (!NULLABLE, x));
-                            NULLABLE := AtomMap.insert (!NULLABLE, x, true);
-                            change := true
+                            NULLABLE := AtomMap.insert (!NULLABLE, x, true)
                         ) else ();
                         i := 0;
                         while (!i < k) do (
+                            if (!ff) then (
+                                let 
+                                    val v = List.nth(!rhs , !i)
+                                    val c = ((AtomMap.remove (!FIRST , x)) handle LibBase.NotFound => (!FIRST, AtomSet.empty));
+                                    val (mp , el) = (ref (#1 c) , ref (#2 c))
+                                in
+                                    FIRST := !mp;
+                                    if (AtomMap.lookup (!NULLABLE, v) handle NotFound => false) then (
+                                        el := AtomSet.union(!el , AtomMap.lookup(!FIRST, v) handle NotFound => AtomSet.empty)
+                                    ) else ();
+                                    FIRST := AtomMap.insert (!FIRST , x, !el);
+                                    ff := (!ff andalso is_null(v))
+                                end
+                            ) else ();
                             j := !i + 1;
                             fs := true;
-                            if (ff) then (
-                                          
-                            );
-                            ff := !ff andalso is_null(List.nth(!rhs , !i));
+                            
                             while (!j < k) do (
-                                fs := !fs andalso is_null(List.nth(!rhs, !j));
-
+                                fs := (!fs andalso is_null(List.nth(!rhs, !j)));
+                                j := !j + 1
                             );
                             i := !i + 1
                         )
-                        
                     end;
                     prods := tl (!prods)
                 )
             end;
             sym := tl(!sym)
         )
-    end
+    end;
+    if (AtomMap.listItems(!NULLABLE) = AtomMap.listItems(!OLD_NULLABLE)) then (
+    ) else (
+        OLD_NULLABLE := !NULLABLE;
+        change := true 
+    );
+    if (AtomMap.listItemsi(!FIRST) = AtomMap.listItemsi(!OLD_FIRST)) then (
+    ) else (
+        OLD_FIRST := !FIRST;
+        change := true 
+    );
+    if (AtomMap.listItemsi(!FOLLOW) = AtomMap.listItemsi(!OLD_FOLLOW)) then (
+    ) else (
+        OLD_FOLLOW := !FOLLOW;
+        change := true 
+    )
 );
 
 
 printNullable();
 printFirst();
 printFollow()
-
