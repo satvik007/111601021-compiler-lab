@@ -1,3 +1,31 @@
+type RHS = Atom.atom list  (* The RHS γ of a rule A -> γ *)
+
+structure RHS_KEY : ORD_KEY = struct
+	(* complete this *)
+    type ord_key = RHS 
+    fun compare ([], []) = EQUAL
+        | compare ([], _) = LESS
+        | compare (_, []) = GREATER
+        | compare (x :: xs, y :: ys) = 
+            let 
+                val temp = Atom.lexCompare(x, y)
+            in
+                case temp of
+                    EQUAL   => compare(xs , ys)
+                |   GREATER => GREATER
+                |   LESS    => LESS
+            end
+end
+
+structure RHSSet = RedBlackSetFn (RHS_KEY)
+
+type Productions = RHSSet.set
+
+type Rules = Productions AtomMap.map
+
+
+type Grammar    = { symbols : AtomSet.set, tokens : AtomSet.set, rules : Rules }
+
 val sym = ref AtomSet.empty ;
 sym := AtomSet.add (!sym , Atom.atom "X") ;
 sym := AtomSet.add (!sym , Atom.atom "Y") ;
