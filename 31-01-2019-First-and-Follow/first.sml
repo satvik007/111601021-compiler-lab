@@ -79,12 +79,28 @@ fun calculate_first x rhs =
             val k = List.length(!rhs)
             val c = ((AtomMap.remove (!FIRST , x)) handle LibBase.NotFound => (!FIRST, AtomSet.empty))
             val (mp , el) = (ref (#1 c) , ref (#2 c))
+            val old_el = el
         in 
             FIRST := !mp;
             while (!i < k andalso !still_nullable) do (
-                el :=  AtomSet.union(!el , AtomMap.lookup(!FIRST, yi) handle NotFound => AtomSet.empty);
+                let 
+                    val yi = List.nth(!rhs, !i)
+                in
+                    el :=  AtomSet.union(!el , AtomMap.lookup(!FIRST, yi) handle NotFound => (
+                        if (AtomSet.member(!sym, yi)) then (
+                            AtomSet.empty
+                        ) else (
+                            AtomSet.singleton (yi)
+                        )
+                    ))
+                end;
                 i := !i + 1
-            )
+            );
+            if (AtomSet.equal (!el, !old_el)) then () 
+            else (
+                change := true
+             );
+            FIRST := AtomMap.insert (!FIRST, x, !el)
         end
     );
 
@@ -146,9 +162,10 @@ fun printFirstFollowHelper [] =
         let
             val (k , v) = x
         in
-            (print ((Atom.toString k) ^ " : " );
+            print ((Atom.toString k) ^ " : " );
             printAtomSet(v);
-            printFirstFollowHelper xs)
+            print ("\n");
+            printFirstFollowHelper xs
         end
     );
 
@@ -161,8 +178,8 @@ fun printNullableHelper [] =
         let
             val (k , v) = x
         in
-            (print ((Atom.toString k) ^ " : " ^ (Bool.toString v) ^ "\n");
-            printNullableHelper xs)
+            print ((Atom.toString k) ^ " : " ^ (Bool.toString v) ^ "\n");
+            printNullableHelper xs
         end
     );
 
@@ -196,7 +213,6 @@ fun printFirst () =
         end
     );
                     
-
 print_all_productions();
 traverse_sym init;
 
