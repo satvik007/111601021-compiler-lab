@@ -2,10 +2,6 @@ val FIRST : AtomSet.set AtomMap.map ref = ref AtomMap.empty;
 val FOLLOW : AtomSet.set AtomMap.map ref = ref AtomMap.empty;
 val NULLABLE : bool AtomMap.map ref = ref AtomMap.empty;
 
-val OLD_FIRST : AtomSet.set AtomMap.map ref = ref AtomMap.empty;
-val OLD_FOLLOW : AtomSet.set AtomMap.map ref = ref AtomMap.empty;
-val OLD_NULLABLE : bool AtomMap.map ref = ref AtomMap.empty;
-
 val change = ref true;
 
 fun is_null (s) = 
@@ -92,7 +88,8 @@ fun calculate_first x rhs =
                         ) else (
                             AtomSet.singleton (yi)
                         )
-                    ))
+                    ));
+                    still_nullable := is_null(yi)
                 end;
                 i := !i + 1
             );
@@ -104,9 +101,70 @@ fun calculate_first x rhs =
         end
     );
 
+fun add_to_follow_1 yi x = 
+    (
+        let 
+            val c = ((AtomMap.remove (!FOLLOW , yi)) handle LibBase.NotFound => (!FOLLOW, AtomSet.empty))
+            val (mp , el) = (ref (#1 c) , ref (#2 c))
+            val old_el = el
+        in 
+            FOLLOW := !mp;
+            el := AtomSet.union (!el, AtomMap.lookup(!FOLLOW, x) handle NotFound => (AtomSet.empty));
+            if (AtomSet.equal (!el, !old_el)) then () 
+            else (
+                change := true
+            );
+            FOLLOW := AtomMap.insert (!FOLLOW, yi, !el)
+        end
+    );
+
+fun add_to_follow_2 yi x = 
+    (
+        let 
+            val c = ((AtomMap.remove (!FOLLOW , yi)) handle LibBase.NotFound => (!FOLLOW, AtomSet.empty))
+            val (mp , el) = (ref (#1 c) , ref (#2 c))
+            val old_el = el
+        in 
+            FOLLOW := !mp;
+            el := AtomSet.union (!el, AtomMap.lookup(!FIRST, x) handle NotFound => (AtomSet.empty));
+            if (AtomSet.equal (!el, !old_el)) then () 
+            else (
+                change := true
+            );
+            FOLLOW := AtomMap.insert (!FOLLOW, yi, !el)
+        end
+    );
+
 fun calculate_follow x rhs = 
     (
-        
+        let 
+            val i = ref 0
+            val k = List.length(!rhs)
+        in 
+            while (!i < k) do (
+                let 
+                    val yi = List.nth(!rhs, !i)
+                    val j = ref (!i + 1)
+                    val still_nullable = ref true
+                in
+                    if (AtomSet.member(!sym, yi)) then (
+                        if (!i = 0 orelse is_nullable (List.drop (!rhs, !i))) then (
+                            add_to_follow_1 yi x
+                        ) else ();
+                        while (!j < k andalso !still_nullable) do (
+                        let 
+                            val yj = List.nth (!rhs, !j)
+                        in 
+                            add_to_follow_2 yi yj;
+                            still_nullable := is_null(yj)
+                        end;
+                        j := !j + 1
+                    )
+                    ) else ()
+                end;
+                i := !i + 1
+            )
+        end
     )
 
 fun traverse_prods function x = 
