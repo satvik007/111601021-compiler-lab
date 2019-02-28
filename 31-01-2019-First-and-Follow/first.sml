@@ -75,7 +75,7 @@ fun calculate_first x rhs =
             val k = List.length(!rhs)
             val c = ((AtomMap.remove (!FIRST , x)) handle LibBase.NotFound => (!FIRST, AtomSet.empty))
             val (mp , el) = (ref (#1 c) , ref (#2 c))
-            val old_el = el
+            val old_el = !el
         in 
             FIRST := !mp;
             while (!i < k andalso !still_nullable) do (
@@ -93,7 +93,7 @@ fun calculate_first x rhs =
                 end;
                 i := !i + 1
             );
-            if (AtomSet.equal (!el, !old_el)) then () 
+            if (AtomSet.equal (!el, old_el)) then () 
             else (
                 change := true
              );
@@ -106,11 +106,11 @@ fun add_to_follow_1 yi x =
         let 
             val c = ((AtomMap.remove (!FOLLOW , yi)) handle LibBase.NotFound => (!FOLLOW, AtomSet.empty))
             val (mp , el) = (ref (#1 c) , ref (#2 c))
-            val old_el = el
+            val old_el = !el
         in 
             FOLLOW := !mp;
             el := AtomSet.union (!el, AtomMap.lookup(!FOLLOW, x) handle NotFound => (AtomSet.empty));
-            if (AtomSet.equal (!el, !old_el)) then () 
+            if (AtomSet.equal (!el, old_el)) then () 
             else (
                 change := true
             );
@@ -123,11 +123,11 @@ fun add_to_follow_2 yi x =
         let 
             val c = ((AtomMap.remove (!FOLLOW , yi)) handle LibBase.NotFound => (!FOLLOW, AtomSet.empty))
             val (mp , el) = (ref (#1 c) , ref (#2 c))
-            val old_el = el
+            val old_el = !el
         in 
             FOLLOW := !mp;
             el := AtomSet.union (!el, AtomMap.lookup(!FIRST, x) handle NotFound => (AtomSet.empty));
-            if (AtomSet.equal (!el, !old_el)) then () 
+            if (AtomSet.equal (!el, old_el)) then () 
             else (
                 change := true
             );
