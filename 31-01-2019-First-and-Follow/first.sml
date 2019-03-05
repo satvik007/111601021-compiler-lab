@@ -1,3 +1,5 @@
+use "grammar.sml";
+
 val FIRST : AtomSet.set AtomMap.map ref = ref AtomMap.empty;
 val FOLLOW : AtomSet.set AtomMap.map ref = ref AtomMap.empty;
 val NULLABLE : bool AtomMap.map ref = ref AtomMap.empty;
