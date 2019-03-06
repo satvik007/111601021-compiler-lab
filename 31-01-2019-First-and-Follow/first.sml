@@ -15,7 +15,7 @@ fun is_nullable (x :: xs) =
     (
         is_null (x) andalso is_nullable (xs)
     )
-| is_nullable ([]) = 
+|   is_nullable ([]) = 
     (
         true
     );
@@ -25,7 +25,7 @@ fun printAtomList (x :: xs) =
         print (Atom.toString (x));
         printAtomList (xs)
     )
-| printAtomList ([]) = 
+|   printAtomList ([]) = 
     (
         print(" ")
     );
