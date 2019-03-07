@@ -16,7 +16,8 @@ val lpt : lloneParsingTable ref = ref LLONE_TBL_MAP.empty;
 
 fun insert_empty_lpt c_sym c_tok = 
     (
-        print (Atom.toString (c_sym) ^ Atom.toString (c_tok) ^ "\n")
+        (* print (Atom.toString (c_sym) ^ Atom.toString (c_tok) ^ "\n") *)
+        lpt := LLONE_TBL_MAP.insert (!lpt, (c_sym, c_tok), RHSSet.empty)
     );
 
 fun traverse_tok function c_sym = 
@@ -81,5 +82,7 @@ fun calculate_table x rhs =
             ) else ()
         end
     );
+
+init_lpt();
 
 calculate calculate_table

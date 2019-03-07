@@ -52,9 +52,18 @@ fun print_prods x =
                 let
                     val rhs = ref (List.hd(!prods))
                 in
-                    printAtomList (!rhs)
+                    if (null (!rhs)) then (
+                        print ("ε ")
+                    ) else (
+                        printAtomList (!rhs)
+                    )
                 end;
-                prods := tl (!prods)
+                prods := tl (!prods);
+                if (null (!prods)) then (
+                        
+                ) else (
+                    print ("| ")
+                )
             );
             print ("\n")
         end
