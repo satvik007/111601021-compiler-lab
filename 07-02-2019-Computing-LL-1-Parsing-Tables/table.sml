@@ -28,7 +28,7 @@ fun traverse_tok function c_sym =
                 let 
                     val x = hd(!tok)
                 in 
-                    function c_sym tok;
+                    function c_sym x;
                     tok := tl(!tok)
                 end
             )
