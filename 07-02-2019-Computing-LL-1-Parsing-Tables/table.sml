@@ -36,27 +36,80 @@ fun traverse_tok function c_sym =
         end
     );
 
+fun print_prod_helper c_sym c_tok = 
+    (
+        let 
+            val prods = ref (RHSSet.listItems ( LLONE_TBL_MAP.lookup(!lpt, (c_sym, c_tok)) handle NotFound => RHSSet.empty ))
+        in
+            print (Atom.toString (c_tok) ^ ": "); 
+            while (List.null(!prods) = false) do (
+                let
+                    val rhs = ref (List.hd(!prods))
+                in
+                    if (null (!rhs)) then (
+                        print ("ε ")
+                    ) else (
+                        printAtomList (!rhs)
+                    )
+                end;
+                prods := tl (!prods);
+                if (null (!prods)) then (
+                        
+                ) else (
+                    print ("| ")
+                )
+            );
+            print ("\n")
+        end
+    );
+
+fun traverse_tok_print function c_sym = 
+    (
+        let 
+            val tok = ref (AtomSet.listItems(#tokens Grm))
+        in 
+            print (Atom.toString c_sym ^ ": \n");
+            while (List.null (!tok) = false) do (
+                let 
+                    val x = hd(!tok)
+                in 
+                    function c_sym x;
+                    tok := tl(!tok)
+                end
+            );
+            print ("\n\n")
+        end
+    );
+
 fun init_lpt () = 
     (
         traverse_sym (traverse_tok (insert_empty_lpt))
     );
 
-fun add_production (token :: token_list, x, rhs_set) = 
+fun add_production (token :: token_list, x, rhs_list) = 
     (
         let 
-            val el = ref (LLONE_TBL_MAP.lookup (!lpt, (x, token)) handle NotFound => (print ("Error in add_production\n"); RHSSet.empty))
+            val c = LLONE_TBL_MAP.remove (!lpt, (x, token)) handle NotFound => (print ("Error in add_production\n"); (!lpt, RHSSet.empty))
+            val (mp, el) = (ref (#1 c), ref (#2 c))
         in 
-            add_production (token_list, x, rhs_set)
+            lpt := !mp;
+            if (RHSSet.member (!el, rhs_list)) then (
+
+            ) else (
+                el := RHSSet.add (!el, rhs_list)
+            );
+            lpt := LLONE_TBL_MAP.insert (!lpt, (x, token), !el);
+            add_production (token_list, x, rhs_list)
         end
     )
-|   add_production ([], x, rhs_set) = 
+|   add_production ([], x, rhs_list) = 
     (
 
     );
 
 fun add_to_table (token_set, x, rhs) = 
     (
-        add_production (AtomSet.listItems(token_set), x, AtomSet.fromList(rhs))
+        add_production (AtomSet.listItems(token_set), x, rhs)
     );
 
 fun calculate_table x rhs = 
@@ -83,6 +136,16 @@ fun calculate_table x rhs =
         end
     );
 
-init_lpt();
+fun print_table () = 
+    (
+        print ("\n=== Printing LLONE TABLE ===\n");
+        traverse_sym (traverse_tok_print (print_prod_helper));
+        print ("=== ======== ===\n")
+    );
 
-calculate calculate_table
+init_lpt ();
+
+calculate calculate_table;
+
+print_table ()
+
