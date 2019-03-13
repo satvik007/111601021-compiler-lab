@@ -137,7 +137,7 @@ fun add_to_follow_2 yi x =
             val old_el = !el
         in 
             FOLLOW := !mp;
-            el := AtomSet.union (!el, AtomMap.lookup(!FIRST, x) handle NotFound => (AtomSet.empty));
+            el := AtomSet.union (!el, AtomMap.lookup(!FIRST, x) handle NotFound => (AtomSet.singleton (x)));
             if (AtomSet.equal (!el, old_el)) then () 
             else (
                 change := true
@@ -159,7 +159,7 @@ fun calculate_follow x rhs =
                     val still_nullable = ref true
                 in
                     if (AtomSet.member(!sym, yi)) then (
-                        if (!i = k - 1 orelse is_nullable (List.drop (!rhs, !i))) then (
+                        if (!i = k - 1 orelse is_nullable (List.drop (!rhs, !i + 1))) then (
                             add_to_follow_1 yi x
                         ) else ();
                         while (!j < k andalso !still_nullable) do (
