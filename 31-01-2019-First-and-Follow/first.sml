@@ -22,7 +22,7 @@ fun is_nullable (x :: xs) =
 
 fun printAtomList (x :: xs) = 
     (
-        print (Atom.toString (x));
+        print (Atom.toString (x) ^ " ");
         printAtomList (xs)
     )
 |   printAtomList ([]) = 
@@ -159,18 +159,18 @@ fun calculate_follow x rhs =
                     val still_nullable = ref true
                 in
                     if (AtomSet.member(!sym, yi)) then (
-                        if (!i = 0 orelse is_nullable (List.drop (!rhs, !i))) then (
+                        if (!i = k - 1 orelse is_nullable (List.drop (!rhs, !i))) then (
                             add_to_follow_1 yi x
                         ) else ();
                         while (!j < k andalso !still_nullable) do (
-                        let 
-                            val yj = List.nth (!rhs, !j)
-                        in 
-                            add_to_follow_2 yi yj;
-                            still_nullable := is_null(yj)
-                        end;
-                        j := !j + 1
-                    )
+                            let 
+                                val yj = List.nth (!rhs, !j)
+                            in 
+                                add_to_follow_2 yi yj;
+                                still_nullable := is_null(yj)
+                            end;
+                            j := !j + 1
+                        )
                     ) else ()
                 end;
                 i := !i + 1
