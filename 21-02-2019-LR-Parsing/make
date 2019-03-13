@@ -1,0 +1,3 @@
+#!/bin/bash
+
+sml grammar.sml first.sml table.sml
