@@ -125,7 +125,9 @@ fun calculate_table x rhs =
                 in
                     if (AtomSet.member (!sym, yi)) then (
                         add_to_table (AtomMap.lookup (!FIRST, yi), x, !rhs)
-                    ) else ();
+                    ) else (
+                        add_to_table (AtomSet.singleton (yi), x, !rhs)
+                    );
                     still_nullable := is_null(yi)
                 end;
                 i := !i + 1
