@@ -37,13 +37,27 @@ end;
 structure ITEM_SET = RedBlackSetFn (ITEM_KEY);
 structure STATE_MAP = RedBlackMapFn (STATE_KEY);
 structure LR0_TBL_MAP = RedBlackMapFn (LR0_TBL_KEY);
+structure STATE_TR_MAP = RedBlackMapFn (LR0_TBL_KEY);
 
 type item_set = ITEM_SET.set;
 type state_map = item_set STATE_MAP.map;
-type lr0_table = Productions LR0_TBL_MAP.map 
+type lr0_table = Productions LR0_TBL_MAP.map;
+type tr_map = int STATE_TR_MAP.map;
 
-val sm : state_map ref = ref STATE_MAP.empty
-val lpt : lr0_table ref = ref LR0_TBL_MAP.empty 
+val sm : state_map ref = ref STATE_MAP.empty;
+val lpt : lr0_table ref = ref LR0_TBL_MAP.empty ;
+val tr : tr_map ref = ref STATE_TR_MAP.empty ;
+
+fun closure (state_no) = 
+	(
+		let 
+			val old_state = ref STATE_MAP.find (!sm, state_no)
+		in 
+			
+		end 
+	);
+
+
 
 
 
