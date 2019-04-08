@@ -1,7 +1,5 @@
-To deal with nested comments using <COMMENT> state and for specific handling of string 
-using <STRING> state. By counting nested depth we implement nested commenting.
-
-The string is read with the help of a buffer.
+To deal with nested comments using <COMMENT> state. 
+By counting nested depth we implement nested commenting.
 
 At EOF we check for two cases, an unclosed comment and an unclosed string. 
 
