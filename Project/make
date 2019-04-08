@@ -1,3 +1,0 @@
-mllex Cal.lex
-mlyacc Cal.grm
-mlton source.mlb

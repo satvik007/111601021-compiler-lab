@@ -1,9 +1,0 @@
-$(SML_LIB)/basis/basis.mlb
-$(SML_LIB)/mlyacc-lib/mlyacc-lib.mlb
-
-Cal_ast.sml
-translate.sml
-Cal.grm.sig
-Cal.grm.sml
-Cal.lex.sml
-CalCompile.sml
