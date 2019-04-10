@@ -1,7 +1,7 @@
 let
 
-    var a_string = "satvik choudhary"
-    var another_string = "thi si a string "
+    var a_string := "satvik choudhary"
+    var another_string := "thi si a string "
 
     var N := 8
 

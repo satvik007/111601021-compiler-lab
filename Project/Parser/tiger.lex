@@ -1,17 +1,11 @@
+type svalue = Tokens.svalue
 type pos = int
-type lexresult = Tokens.token
+type ('a, 'b) token = ('a, 'b) Tokens.token
+type lexresult = (svalue, pos) token
 
 val lineNum = ErrorMsg.lineNum
 val linePos = ErrorMsg.linePos
 fun err(p1,p2) = ErrorMsg.error 
-
-val lineNo = ErrorMsg.lineNum
-val linePos = ErrorMsg.linePos
-val colNo = ref 1
-val currentCol = ref 1
-val givenString = ref ""
-val stringOpen = ref 0
-val actualString = ref "" 
 
 (* For handling strings *)
 val stringBuf : string ref = ref ""
@@ -38,6 +32,7 @@ fun eof() = let val pos = hd(!linePos) in
     Tokens.EOF(pos,pos) end
 
 %% 
+%header (functor TigerLexFun(structure Tokens: Tiger_TOKENS));
 %s COMMENT STRING FSTRING;
 
 %%
