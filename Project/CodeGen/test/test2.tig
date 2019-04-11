@@ -32,6 +32,6 @@ let
 
 )
  in 
- 	tryf(0); printboard()
+ 	tryf(0)
 end
 	

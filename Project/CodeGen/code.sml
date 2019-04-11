@@ -340,7 +340,7 @@ fun print (outstream, e0) =
 		()
 
  	in  
-	 	sayln "from __future__ import print_function";
+	 	sayln "from __future__ import print_function\n";
 	 	exp(e0, 0);
 		sayln "\n";
 		TextIO.flushOut outstream

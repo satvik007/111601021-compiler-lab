@@ -1,4 +1,5 @@
 from __future__ import print_function
+
 def LetH0():
 	a_string = "satvik choudhary"
 	another_string = "thi si a string "
@@ -9,8 +10,8 @@ def LetH0():
 	diag2 = [0] * (((N + N) - 1))
 
 	def printboard():
-		for i in range (0, (N - 1)):
-			for j in range (0, (N - 1)):
+		for i in range (0, (N - 1) + 1):
+			for j in range (0, (N - 1) + 1):
 				if (col[i] == j):
 					print(" O", end="")
 				else:
@@ -25,7 +26,7 @@ def LetH0():
 		if (c == N):
 			printboard()
 		else:
-			for r in range (0, (N - 1)):
+			for r in range (0, (N - 1) + 1):
 				if (((row[r] == 0) and (diag1[(r + c)] == 0)) and (diag2[((r + 7) - c)] == 0)):
 					row[r] = 1
 					diag1[(r + c)] = 1
@@ -37,9 +38,8 @@ def LetH0():
 
 					diag2[((r + 7) - c)] = 0
 
-	tryf(0)
 
-	printboard()
+	tryf(0)
 
 LetH0()
 
