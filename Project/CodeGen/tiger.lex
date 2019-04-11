@@ -93,8 +93,8 @@ fun eof() = let val pos = hd(!linePos) in
 
 <INITIAL>\" => (inString := 1; YYBEGIN STRING; stringBegin := yypos; stringBuf := ""; continue());
 <STRING> [ -!#-\[\]-~]* => (stringBuf := !stringBuf ^ yytext; continue());
-<STRING> \\n => (stringBuf := !stringBuf ^ "\n"; continue());
-<STRING> \\t => (stringBuf := !stringBuf ^ "\t"; continue());
+<STRING> \\n => (stringBuf := !stringBuf ^ "\\n"; continue());
+<STRING> \\t => (stringBuf := !stringBuf ^ "\\t"; continue());
 <STRING> \\\" => (stringBuf := !stringBuf ^ "\""; continue());
 <STRING> \\\\ => (stringBuf := !stringBuf ^ "\\"; continue());
 <STRING> \\[0-9][0-9][0-9] => (stringBuf := !stringBuf ^ asciiCode(yytext); continue());

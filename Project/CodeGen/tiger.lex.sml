@@ -305,9 +305,9 @@ fun yyAction50 (strm, lastMatch : yymatch) = let
         yystrm := strm; (stringBuf := !stringBuf ^ yytext; continue())
       end
 fun yyAction51 (strm, lastMatch : yymatch) = (yystrm := strm;
-      (stringBuf := !stringBuf ^ "\n"; continue()))
+      (stringBuf := !stringBuf ^ "\\n"; continue()))
 fun yyAction52 (strm, lastMatch : yymatch) = (yystrm := strm;
-      (stringBuf := !stringBuf ^ "\t"; continue()))
+      (stringBuf := !stringBuf ^ "\\t"; continue()))
 fun yyAction53 (strm, lastMatch : yymatch) = (yystrm := strm;
       (stringBuf := !stringBuf ^ "\""; continue()))
 fun yyAction54 (strm, lastMatch : yymatch) = (yystrm := strm;

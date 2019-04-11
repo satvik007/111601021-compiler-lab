@@ -1,6 +1,5 @@
 all:
 	sml input.sml
-	cat ast.txt
 	cat final.py
 
 clean: 
