@@ -128,12 +128,10 @@ fun print (outstream, e0) =
 		| exp(A.CallExp{func, args, pos}, d) =
 		(
 			indent d;
+			say "__";
 			say(Symbol.name func);
       say "(";
 			dolist_no 0 exp args;
-			if ((Symbol.name func) = "print") then (
-				say ", end=\"\""
-			) else ();
       sayln ")"
 		)
 		| exp(A.OpExp{left, oper, right, pos}, d) =
@@ -266,6 +264,7 @@ fun print (outstream, e0) =
 	    let 
 				fun field({name, escape, typ, pos}, d) = 
 				(
+					
 					say(Symbol.name name)
 					(* indent d; 
 					
@@ -277,6 +276,7 @@ fun print (outstream, e0) =
 					indent d; 
 					(* say "(";  *)
 					say "def ";
+					say "__";
 					say (Symbol.name name); 
 					say "(";
 		    	dolist_no d field params;
@@ -340,7 +340,8 @@ fun print (outstream, e0) =
 		()
 
  	in  
-	 	sayln "from __future__ import print_function\n";
+	 	sayln "from __future__ import print_function\n\n";
+		sayln "def __print(s):\n\tprint(s, end=\"\")\n\n";
 	 	exp(e0, 0);
 		sayln "\n";
 		TextIO.flushOut outstream
