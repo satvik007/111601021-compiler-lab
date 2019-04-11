@@ -1,4 +1,5 @@
-def LetH0:
+from __future__ import print_function
+def LetH0():
 	a_string = "satvik choudhary"
 	another_string = "thi si a string "
 	N = 8
@@ -10,41 +11,35 @@ def LetH0:
 	def printboard():
 		for i in range (0, (N - 1)):
 			for j in range (0, (N - 1)):
-				if (col[i] = j):
-					print(" O")
+				if (col[i] == j):
+					print(" O", end="")
 				else:
-					print(" .")
+					print(" .", end="")
 
-			print("\n")
+			print("\n", end="")
 
-		print("\n")
+		print("\n", end="")
 
 
-	def try(c):
-		if (c = N):
+	def tryf(c):
+		if (c == N):
 			printboard()
 		else:
 			for r in range (0, (N - 1)):
-				if (((row[r] = 0) && (diag1[(r + c)] = 0)) && (diag2[((r + 7) - c)] = 0)):
-					nonlocal row[r]
+				if (((row[r] == 0) and (diag1[(r + c)] == 0)) and (diag2[((r + 7) - c)] == 0)):
 					row[r] = 1
-					nonlocal diag1[(r + c)]
 					diag1[(r + c)] = 1
-					nonlocal diag2[((r + 7) - c)]
 					diag2[((r + 7) - c)] = 1
-					nonlocal col[c]
 					col[c] = r
-					try((c + 1))
-					nonlocal row[r]
+					tryf((c + 1))
 					row[r] = 0
-					nonlocal diag1[(r + c)]
 					diag1[(r + c)] = 0
 
-					nonlocal diag2[((r + 7) - c)]
 					diag2[((r + 7) - c)] = 0
 
+	tryf(0)
 
-	try(0)
+	printboard()
 
 LetH0()
 

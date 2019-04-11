@@ -19,7 +19,7 @@ let
 	     print("\n"));
          print("\n"))
 
-    function try(c:int) = 
+    function tryf(c:int) = 
 (
      if c=N
      then printboard()
@@ -27,10 +27,11 @@ let
 	   do if row[r]=0 & diag1[r+c]=0 & diag2[r+7-c]=0
 	           then (row[r]:=1; diag1[r+c]:=1; diag2[r+7-c]:=1;
 		         col[c]:=r;
-	                 try(c+1);
+	                 tryf(c+1);
 			 row[r]:=0; diag1[r+c]:=0; diag2[r+7-c]:=0)
 
 )
- in try(0)
+ in 
+ 	tryf(0); printboard()
 end
 	

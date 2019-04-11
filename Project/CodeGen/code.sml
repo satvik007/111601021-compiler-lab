@@ -31,14 +31,14 @@ fun print (outstream, e0) =
     | opname A.MinusOp = "-"
     | opname A.TimesOp = "*"
     | opname A.DivideOp = "/"
-    | opname A.EqOp = "="
+    | opname A.EqOp = "=="
     | opname A.NeqOp = "!="
     | opname A.LtOp = "<"
     | opname A.LeOp = "<="
     | opname A.GtOp = ">"
     | opname A.GeOp = ">="
-		| opname A.AndOp = "&&"
-		| opname A.OrOp = "||"
+		| opname A.AndOp = "and"
+		| opname A.OrOp = "or"
 
 
 		fun dolist d f [a] = 
@@ -64,6 +64,18 @@ fun print (outstream, e0) =
       dolist d f r
     )
     | dolist_no d f nil = ()
+
+
+		fun var_name (A.SubscriptVar(v, e, p), d) = 
+		(
+			var_name(v, 0)
+		)
+		| var_name (A.SimpleVar(s, p), d) = 
+		(
+			indent d;
+			say (Symbol.name s)
+		) 
+
 
 		fun var(A.SimpleVar(s, p), d) = 
 		(
@@ -119,6 +131,9 @@ fun print (outstream, e0) =
 			say(Symbol.name func);
       say "(";
 			dolist_no 0 exp args;
+			if ((Symbol.name func) = "print") then (
+				say ", end=\"\""
+			) else ();
       sayln ")"
 		)
 		| exp(A.OpExp{left, oper, right, pos}, d) =
@@ -161,10 +176,10 @@ fun print (outstream, e0) =
 		| exp(A.AssignExp{var = v, exp = e, pos}, d) = 
 		(
 			indent d;
-			say "nonlocal ";
-			var (v, 0);
+			(* say "nonlocal ";
+			var_name (v, 0);
 			sayln "";
-			indent d;
+			indent d; *)
 			var(v, 0);
       say " = "; 
 			exp(e, 0);
@@ -206,7 +221,7 @@ fun print (outstream, e0) =
 			exp(lo, 0);
 			say ", "; 
 			exp(hi, 0); 
-			say "):\n";
+			say " + 1):\n";
 			exp(body, d + 1)
 		)
 		| exp(A.BreakExp p, d) = 
@@ -223,7 +238,7 @@ fun print (outstream, e0) =
 				say "def ";
 				say "LetH";
 				say (Int.toString (!temp_let));
-				sayln ":";
+				sayln "():";
 				temp_let := !temp_let + 1;
 				dolist (d + 1) dec decs;
 				exp(body, d + 1);
@@ -325,6 +340,7 @@ fun print (outstream, e0) =
 		()
 
  	in  
+	 	sayln "from __future__ import print_function";
 	 	exp(e0, 0);
 		sayln "\n";
 		TextIO.flushOut outstream
